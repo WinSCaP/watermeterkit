@@ -22,3 +22,4 @@ Braindump
 - https://community.home-assistant.io/t/inductive-water-meter/144990/15
 - https://esphome.io/components/sensor/pulse_counter.html
 - https://gathering.tweakers.net/forum/list_messages/1596066/16
+- https://www.huizebruin.nl/home-assistant/esphome/watermeter-uitlezen-in-home-assistant-met-esphome/
