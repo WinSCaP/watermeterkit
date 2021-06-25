@@ -1,7 +1,8 @@
 # watermeterkit
 
 > Maak je even een backup van je Wemos? :)
-> https://www.twoenter.nl/blog/arduino-esp/wemos-d1-mini-flash-back-up-en-restore/
+> https://github.com/espressif/esptool
+`.\esptool.exe --port COM13 --baud 115200 read_flash 0x000 4194304 backup-watermeter-model-b-1.2.bin`
 
 De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizing. Maar helaas is er ook een nadeel. De YAML wordt niet vrijgegeven, dus hij is defacto closed source. Maar daar kunnen we iets aan doen :)
 
