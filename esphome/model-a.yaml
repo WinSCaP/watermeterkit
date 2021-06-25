@@ -1,0 +1,208 @@
+---
+# Water Meter
+#
+# Aggrigated from: https://github.com/frenck/home-assistant-config/blob/master/config/esphome/water_meter.yaml
+# Modified to be compliant with the original
+#
+# This is device that is attached to my water meter. It has a little rotating
+# indicator, that rotates exactly once for each liter of water used.
+#
+# Using an inductive sensor, it can determine the water usage, as each pulse
+# now becomes a liter of water. Providing me current usage flow in L/min and
+# the total usage registered (in M3).
+#
+# Originally bought on: https://watermeterkit.nl
+# But created my own ESPHome firmware for it (which is what you are looking at).
+#
+# The blue LED tells the device is powered on (built-in on the Wemos D1 mini).
+# The green LED blinks when a pulse is measures (each liter of water used).
+# The red LED shows if there is a problem:
+# - Blinks slow (once a second): Connection disrupted
+# - Blinks fast: ESPHome has an error settings up
+# - Off: All fine!
+#
+substitutions:
+  slug: water_meter
+  name: Water Meter
+  description: Small pulse sensor attached to the water meter of my home.
+  api_password: !secret esphome_water_meter_api_password
+  ota_password: !secret esphome_water_meter_ota_password
+  version: 1.1
+  model: model-a
+  time_timezone: "Europe/Amsterdam"
+  web_server_username: esphome
+  web_server_password: !secret esphome_web_server_password  
+  wifi_ssid: !secret wifi_iot_ssid
+  wifi_password: !secret wifi_iot_password
+  wifi_ap_password: "esphome-${slug}"
+
+packages:
+  api:
+    id: component_api
+    password: "${api_password}"
+    # Made this a bit longer, as in my case...
+    # I F-things up from time to time, this gives me time to fix ;)
+    reboot_timeout: 30min
+  captive_portal: ~  
+  logger:
+    id: component_logger
+    # Disabling logging over UART by default.
+    # Some devices this is needed, and in general,
+    # I really don't look at it.
+#    baud_rate: 0  # Remove # to disable UART
+  ota:
+    id: component_ota
+    password: "${ota_password}"
+    safe_mode: true
+    reboot_timeout: 10min
+    num_attempts: 5  
+wifi:
+  id: component_wifi
+  ssid: "${wifi_ssid}"
+  password: "${wifi_password}"
+  reboot_timeout: 10min
+  ap:
+    ssid: "${name}"
+    password: "${wifi_ap_password}"
+  board: 
+    esphome:
+      name: "${slug}"
+      comment: "${description}"
+      build_path: "./.build/${slug}/"
+      platform: ESP8266
+      board: d1_mini
+      on_boot:
+        priority: -10
+        then:
+        - wait_until:
+            api.connected:
+        - logger.log: API is connected!
+        - text_sensor.template.publish:
+            id: template_model
+            state: "${model}"
+        - text_sensor.template.publish:
+            id: template_version
+            state: "${version}"
+  i2c:
+    sda: GPIO21
+    scl: GPIO22
+
+switch:
+  - platform: restart
+    id: switch_restart
+    name: "${name} Restart"
+
+status_led:
+  pin: D3
+
+output:
+  - platform: esp8266_pwm
+    id: output_led_green
+    pin: D4
+
+light:
+  - platform: monochromatic
+    id: light_led_green
+    output: output_led_green
+
+time:
+  - platform: homeassistant
+    id: time_homeassistant
+    timezone: "${time_timezone}"
+    on_time_sync:
+      - component.update: sensor_uptime_timestamp
+  - platform: sntp
+    id: time_sntp
+    timezone: "${time_timezone}"
+
+web_server:
+  id: component_web_server
+  auth:
+    username: "${web_server_username}"
+    password: "${web_server_password}"
+
+sensor:
+  - platform: uptime
+    id: sensor_uptime
+  - platform: template
+    id: sensor_uptime_timestamp
+    name: "${name} Uptime"
+    device_class: "timestamp"
+    accuracy_decimals: 0
+    update_interval: never
+    lambda: |-
+      static float timestamp = (
+        id(time_homeassistant).utcnow().timestamp - id(sensor_uptime).state
+      );
+      return timestamp;
+  - platform: shtcx
+    temperature:
+      id: sensor_temperature
+      name: "${name} Temperature"
+    humidity:
+      id: sensor_humidity
+      name: "${name} Humidity"
+update_interval: 600s
+  - platform: pulse_meter
+    id: sensor_pulse_meter
+    name: "${name} Current Usage"
+    icon: "mdi:water-pump"
+    unit_of_measurement: "L/min"
+    timeout: 2min
+    accuracy_decimals: 1
+    total:
+      id: sensor_pulse_meter_total
+      name: "${name} Total Consumption"
+      icon: "mdi:cube-outline"
+      unit_of_measurement: "M3"
+      accuracy_decimals: 3
+      filters:
+        - multiply: 0.001
+    pin: D5
+    on_value:
+      then:
+        - light.turn_on:
+            id: light_led_green
+            flash_length: 1s
+  - platform: template
+    id: sensor_wifi_signal_percentage
+    name: "${name} Wi-Fi Signal Percentage"
+    icon: "mdi:wifi"
+    unit_of_measurement: "%"
+    update_interval: never
+    lambda: |-
+      if (id(sensor_wifi_signal).state) {
+        if (id(sensor_wifi_signal).state <= -100 ) {
+          return 0;
+        } else if (id(sensor_wifi_signal).state >= -50) {
+          return 100;
+        } else {
+          return 2 * (id(sensor_wifi_signal).state + 100);
+        }
+      } else {
+        return NAN;
+      }
+  - platform: wifi_signal
+    id: sensor_wifi_signal
+    name: "${name} Wi-Fi Signal"
+    update_interval: 300s
+    on_value:
+      - component.update: sensor_wifi_signal_percentage
+            
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "${name} IP Address"
+    ssid:
+      name: "${name} Connected SSID"
+    bssid:
+      name: "${name} Connected BSSID"   
+  - platform: version
+    id: text_sensor_version
+    name: "${name} ESPHome Version"
+  - platform: template
+    name: "${name} Model"
+    id: template_model
+  - platform: template
+    name: "${name} Version"  
+    id: template_version
