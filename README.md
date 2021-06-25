@@ -1,19 +1,22 @@
 # watermeterkit
+
+> Maak je even een backup van je Wemos? :)
+> https://www.twoenter.nl/blog/arduino-esp/wemos-d1-mini-flash-back-up-en-restore/
+
+De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizing. Maar helaas is er ook een nadeel. De YAML wordt niet vrijgegeven, dus hij is defacto closed source. Maar daar kunnen we iets aan doen :)
+
+## Reverse enginering Model B
 - LJ18A3-8-Z/BX-5V (https://nl.aliexpress.com/item/32844213899.html)
   - 5v Bruin
   - gnd blauw
   - data zwart (D5)
 - WemosD1 (https://nl.aliexpress.com/item/32651747570.html)
-  - Alternative ESP32 (https://nl.aliexpress.com/item/1005002571158111.html)
-- RGB Led (?)
+- RGB Led 
+  - Vervang indien zelfbouw door Neopixel 
 - HDC1080 (temperature humidity) Component in ESPhome
-- Buzzer (Restant van Tagreader (https://github.com/adonno/tagreader) D7?
-
-Mounts
-- Sensus 620 https://www.thingiverse.com/thing:4489072
-- 
-
-PCB via watermeterkit.nl (NB Closed Source!)
+  - Model A heeft een SHT, advies: BME 280
+- Additioneel
+  - Buzzer (Restant van Tagreader (https://github.com/adonno/tagreader) D7?
 
 |   |   | Wemos  |   |   |
 |---|---|---|---|---|
@@ -25,9 +28,14 @@ PCB via watermeterkit.nl (NB Closed Source!)
 |   |D7|   |D4 |Led R|
 |   |D8|   |GND|   |
 |   |3v3|   |5V|   |
-  
 
-Braindump
+## Mounts
+- Sensus 620 https://www.thingiverse.com/thing:4489072
+- Generiek (In deze Repo)
+- Kopen bij watermeterkit.nl
+ 
+ 
+## Braindump
 - https://www.jbswebcom.nl/knutselen/index.php/watermeter-uitlezen-met-npn-sensor
 - https://community.home-assistant.io/t/inductive-npn-sensor-and-raspberry-pi/132487
 - https://community.home-assistant.io/t/inductive-water-meter/144990/15
