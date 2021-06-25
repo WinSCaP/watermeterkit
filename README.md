@@ -21,8 +21,8 @@ PCB via watermeterkit.nl (NB Closed Source!)
 |   |A0|   |RX |   |
 |   |D0|   |D1 |HDC1080|
 |Pulsemeter|D5|   |D2 |HDC1080|
-|   |D6|   |D3 |   |
-|   |D7|   |D4 |   |
+|   |D6|   |D3 |Led G|
+|   |D7|   |D4 |Led R|
 |   |D8|   |GND|   |
 |   |3v3|   |5V|   |
   
