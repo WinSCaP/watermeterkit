@@ -5,7 +5,7 @@
 - backup `.\esptool.exe --port COMx --baud 115200 read_flash 0x000 4194304 backup-watermeter.bin` (Eigen COM poort opgeven)
 - restore `.\esptool.exe --port COMx --baud 115200 write_flash 0x000 backup-watermeter.bin`
 - Heb je python? [espota.py](https://github.com/esp8266/Arduino/blob/master/tools/espota.py)
-- `python espota.py -d -i 192.168.4.1 -f backup-watermeter.bin`
+- `python espota.py -d -i 192.168.4.1 -f backup-watermeter.bin` (OTA, dus niet naar de meterkast om te flashen )
 
 De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizing. Maar helaas is er ook een nadeel. De YAML is niet vrijgegeven, dus hij is defacto closed source. Maar daar kunnen we iets aan doen :)
 
