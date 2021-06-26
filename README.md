@@ -1,8 +1,11 @@
 # watermeterkit
 
 > Maak je even een backup van je Wemos? :)
-> https://github.com/espressif/esptool
-`.\esptool.exe --port COM13 --baud 115200 read_flash 0x000 4194304 backup-watermeter-model-b-1.2.bin`
+- Download https://github.com/espressif/esptool
+- backup `.\esptool.exe --port COMx --baud 115200 read_flash 0x000 4194304 backup-watermeter.bin` (Eigen COM poort opgeven)
+- restore `.\esptool.exe --port COMx --baud 115200 write_flash 0x000 backup-watermeter.bin`
+- Heb je python? [espota.py](https://github.com/esp8266/Arduino/blob/master/tools/espota.py)
+- `python espota.py -d -i 192.168.4.1 -f backup-watermeter.bin`
 
 De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizing. Maar helaas is er ook een nadeel. De YAML is niet vrijgegeven, dus hij is defacto closed source. Maar daar kunnen we iets aan doen :)
 
