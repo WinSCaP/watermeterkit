@@ -8,7 +8,7 @@ De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizi
 
 ## Ja en nu?
 1. De YAML voor model A en model B vind je [hier](esphome)
-2. Wil je een generieke [behuizing](model)
+2. Wil je een generieke [behuizing](mount)
 3. Of gewoon de [home assistant config?](homeassistant)
 
 ## Reverse enginering Model B
