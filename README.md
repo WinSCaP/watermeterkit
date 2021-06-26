@@ -19,7 +19,7 @@ De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizi
 - Additioneel
   - Buzzer (Restant van Tagreader (https://github.com/adonno/tagreader) D7?
 
-![Schema](Schema.png)
+![Schema](schema.png)
 
 |   |   | Wemos  |   |   |
 |---|---|---|---|---|
