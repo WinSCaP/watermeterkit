@@ -17,10 +17,13 @@ De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizi
   - gnd blauw
   - data zwart (D5)
 - WemosD1 (https://nl.aliexpress.com/item/32651747570.html)
-- RGB Led 
-  - Vervang indien zelfbouw door Neopixel (https://nl.aliexpress.com/item/32732638750.html)
+- RGB Led (blauw niet aan Wemos)
+  - D4 - Rood
+  - D3 - Groen (zit ook aan standaard blauwe LED van Wemos)
+  - Vervangen door Neopixel? (https://nl.aliexpress.com/item/32732638750.html)
 - HDC1080 (temperature humidity) Component in ESPhome
-  - Model A heeft een SHT, advies: BME 280
+  - Model A heeft een SHT
+  - BME 280 toevoegen voor luchtdruk?
 - Additioneel
   - Buzzer (Restant van Tagreader (https://github.com/adonno/tagreader) D7?
 
