@@ -190,7 +190,7 @@ sensor:
     update_interval: 300s
     on_value:
       - component.update: sensor_wifi_signal_percentage
-  - platform: template
+  - platform: template // Adapted from: https://community.home-assistant.io/t/how-to-do-maths-in-sensor-template-with-esphome-on-hassio/193994
     name: "${name} Dew Point"
     unit_of_measurement: "°C"
     lambda: |-
