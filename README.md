@@ -6,6 +6,11 @@
 
 De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizing. Maar helaas is er ook een nadeel. De YAML is niet vrijgegeven, dus hij is defacto closed source. Maar daar kunnen we iets aan doen :)
 
+## Ja en nu?
+1. De YAML voor model A en model B vind je [hier](esphome)
+2. Wil je een generieke [behuizing](model)
+3. Of gewoon de [home assistant config?](homeassistant)
+
 ## Reverse enginering Model B
 - NPN Proximity Sensor LJ18A3-8-Z/BX-5V (https://nl.aliexpress.com/item/32844213899.html)
   - 5v Bruin
