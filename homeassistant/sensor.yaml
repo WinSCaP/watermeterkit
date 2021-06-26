@@ -1,3 +1,5 @@
+# MOET OPNIEUW!
+
   - platform: template
     sensors:
       water_meter_counter:
