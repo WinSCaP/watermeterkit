@@ -4,7 +4,7 @@
 > https://github.com/espressif/esptool
 `.\esptool.exe --port COM13 --baud 115200 read_flash 0x000 4194304 backup-watermeter-model-b-1.2.bin`
 
-De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizing. Maar helaas is er ook een nadeel. De YAML wordt niet vrijgegeven, dus hij is defacto closed source. Maar daar kunnen we iets aan doen :)
+De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizing. Maar helaas is er ook een nadeel. De YAML is niet vrijgegeven, dus hij is defacto closed source. Maar daar kunnen we iets aan doen :)
 
 ## Reverse enginering Model B
 - LJ18A3-8-Z/BX-5V (https://nl.aliexpress.com/item/32844213899.html)
@@ -36,7 +36,7 @@ De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizi
 - Kopen bij watermeterkit.nl
  
  
-## Braindump
+## Meuk
 - https://www.jbswebcom.nl/knutselen/index.php/watermeter-uitlezen-met-npn-sensor
 - https://community.home-assistant.io/t/inductive-npn-sensor-and-raspberry-pi/132487
 - https://community.home-assistant.io/t/inductive-water-meter/144990/15
