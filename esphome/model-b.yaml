@@ -24,38 +24,37 @@
 substitutions:
   slug: water_meter
   name: Water Meter
-  description: Small pulse sensor attached to the water meter of my home.
-  api_password: !secret esphome_water_meter_api_password
-  ota_password: !secret esphome_water_meter_ota_password
-  version: 1.1
-  model: model-a
+  description: "Small pulse sensor attached to the water meter of my home. Repo: https://github.com/WinSCaP/watermeterkit"
+  api_password: !secret api_password
+  ota_password: !secret api_password
+  version: "1.1"
+  model: model-b
   time_timezone: "Europe/Amsterdam"
   web_server_username: esphome
   web_server_password: !secret esphome_web_server_password  
-  wifi_ssid: !secret wifi_iot_ssid
-  wifi_password: !secret wifi_iot_password
+  wifi_ssid: !secret wifi_ssid
+  wifi_password: !secret wifi_password
   wifi_ap_password: "esphome-${slug}"
 
-packages:
-  api:
-    id: component_api
-    password: "${api_password}"
-    # Made this a bit longer, as in my case...
-    # I F-things up from time to time, this gives me time to fix ;)
-    reboot_timeout: 30min
-  captive_portal: ~  
-  logger:
-    id: component_logger
-    # Disabling logging over UART by default.
-    # Some devices this is needed, and in general,
-    # I really don't look at it.
+api:
+  id: component_api
+  password: "${api_password}"
+  # Made this a bit longer, as in my case...
+  # I F-things up from time to time, this gives me time to fix ;)
+  reboot_timeout: 30min
+captive_portal: 
+logger:
+  id: component_logger
+  # Disabling logging over UART by default.
+  # Some devices this is needed, and in general,
+  # I really don't look at it.
 #    baud_rate: 0  # Remove # to disable UART
-  ota:
-    id: component_ota
-    password: "${ota_password}"
-    safe_mode: true
-    reboot_timeout: 10min
-    num_attempts: 5  
+ota:
+  id: component_ota
+  password: "${ota_password}"
+  safe_mode: true
+  reboot_timeout: 10min
+  num_attempts: 5  
 wifi:
   id: component_wifi
   ssid: "${wifi_ssid}"
@@ -64,28 +63,30 @@ wifi:
   ap:
     ssid: "${name}"
     password: "${wifi_ap_password}"
-  board: 
-    esphome:
-      name: "${slug}"
-      comment: "${description}"
-      build_path: "./.build/${slug}/"
-      platform: ESP8266
-      board: d1_mini
-      on_boot:
-        priority: -10
-        then:
-        - wait_until:
-            api.connected:
-        - logger.log: API is connected!
-        - text_sensor.template.publish:
-            id: template_model
-            state: "${model}"
-        - text_sensor.template.publish:
-            id: template_version
-            state: "${version}"
-  i2c:
-    sda: GPIO21
-    scl: GPIO22
+
+esphome:
+  name: "${slug}"
+  comment: "${description}"
+  build_path: "./.build/${slug}/"
+  platform: ESP8266
+  board: d1_mini
+  on_boot:
+    priority: -10
+    then:
+    - wait_until:
+        api.connected:
+    - logger.log: API is connected!
+    - text_sensor.template.publish:
+        id: template_model
+        state: "${model}"
+    - text_sensor.template.publish:
+        id: template_version
+        state: "${version}"
+i2c:
+  scl: D1
+  sda: D2
+  scan: True
+  frequency: 50kHz
 
 switch:
   - platform: restart
@@ -142,7 +143,7 @@ sensor:
     humidity:
       id: sensor_humidity
       name: "${name} Humidity"
-update_interval: 600s
+    update_interval: 60s
   - platform: pulse_meter
     id: sensor_pulse_meter
     name: "${name} Current Usage"
@@ -188,6 +189,16 @@ update_interval: 600s
     update_interval: 300s
     on_value:
       - component.update: sensor_wifi_signal_percentage
+  - platform: template
+    name: "${name} Dew Point"
+    unit_of_measurement: "°C"
+    lambda: |-
+      const float a = 17.27;   // const from https://planetcalc.com/248/
+      const float b = 237.7;   // const from https://planetcalc.com/248/
+      return ( (b * ( (id(sensor_temperature).state * a) / ( b + id(sensor_temperature).state) + logf (id(sensor_humidity).state/100) ) )/( a - ( (id(sensor_temperature).state * a) / ( b + id(sensor_temperature).state) + logf (id(sensor_humidity).state/100) ) ) ); 
+    accuracy_decimals: 4
+    update_interval: 60s
+
             
 text_sensor:
   - platform: wifi_info
