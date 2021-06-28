@@ -190,18 +190,6 @@ sensor:
         - light.turn_on:
             id: light_led_green
             flash_length: 1s
-  - platform: pulse_counter # Thank you yniezink
-    pin: D5
-    name: "${name} Usage"
-    id: sensor_pulse_counter
-    total:
-      id: sensor_pulse_counter_total
-      name: "${name} Usage in m3"
-      icon: "mdi:cube-outline"
-      unit_of_measurement: "M3"
-      accuracy_decimals: 3
-      filters:
-        - multiply: 0.001
   - platform: template
     id: sensor_wifi_signal_percentage
     name: "${name} Wi-Fi Signal Percentage"
