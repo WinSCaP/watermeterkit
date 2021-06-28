@@ -1,5 +1,7 @@
 # MOET OPNIEUW!
 
+# Let op, dit is allemaal copy pasta meuk. Zie: platform-template-water.yaml
+
   - platform: template
     sensors:
       water_meter_counter:
