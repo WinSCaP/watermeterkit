@@ -28,7 +28,7 @@ substitutions:
   api_password: !secret api_password
   ota_password: !secret api_password
   version: "1.1"
-  model: model-b
+  model: model-a
   time_timezone: "Europe/Amsterdam"
   web_server_username: esphome
   web_server_password: !secret esphome_web_server_password  
