@@ -1,0 +1,49 @@
+# Sensors watermeterkit 
+
+# In mijn configuration.yaml heb ik: sensor: !include_dir_merge_list sensors/ 
+# Daarom is de regel hieronder gecomment
+#sensor:
+
+# Vervang 999 door je huidige meterstand
+## Totaalstand
+  - platform: template
+    sensors:
+      water_meter_counter:
+        friendly_name: Watermeter counter
+        unit_of_measurement: m3
+        value_template: |
+          {% set water = ((states('sensor.water_meter_total_consumption')|float + 999)) %}
+          {% if water <= 999999 %}
+            {{ ((states('sensor.water_meter_total_consumption')|float + 999))|round(3) }}
+          {% else %}
+            {{ (states('sensor.water_meter_total_consumption')|float)|round(3) }}
+          {% endif %}
+
+## Kosten
+#
+# Dunea heeft een aantal tarieven. 
+# 1,09 inclusief per 1000 liter (1m3) 
+# 0,39 inclusief Belasting op Leidingwater (voor de eerste 300m3)
+# 0,18 inclusief per dag voor Vastrecht (65.79 / 365)
+# 0,09 inclusief per dag voor Precario (Leiden 32.95 / 365)
+# Float * [tarief per 1m3] + 0.27 per dag
+  - platform: template
+    sensors:
+      water_cost_daily: 
+        friendly_name: Water Cost Daily
+        unit_of_measurement: '€'
+        value_template: "{{ (states('sensor.daily_water_m3') | float * 1.09) | round(2) + 0.27 | round(2)}}"
+
+      water_cost_daily_eur: # Euro symbool in de tekst van de sensor
+        friendly_name: Water Cost Daily
+        value_template: "€{{ (states('sensor.daily_water_m3') | float * 1.08346) | round(2) + 0.27 | round(2)}}"
+
+      water_cost_monthly: # Mijn maand heeft altijd 30,5 dagen voor het vaste tarief
+        friendly_name: Water Cost Monthly
+        unit_of_measurement: '€'
+        value_template: "{{ (states('sensor.monthly_water_m3') | float * 1.08346) | round(2) + 8.23 | round(2)}}"
+
+      water_cost_yearly:
+        friendly_name: Water Cost Yearly
+        unit_of_measurement: '€'
+        value_template: "{{ (states('sensor.yearly_water_m3') | float * 1.08346) | round(2) + 98.74 | round(2)}}"
