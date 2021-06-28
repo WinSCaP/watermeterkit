@@ -14,6 +14,11 @@ De watermeterkit kun je kopen via watermeterkit.nl. Deze is compleet met behuizi
 2. Wil je een generieke [behuizing](mount)
 3. Of gewoon de [home assistant config?](homeassistant)
 
+### Kosten voor water in HA
+Tarieven:
+- [Dunea](https://www.dunea.nl/tarieven-en-voorwaarden)
+- Pull requests welkom :)
+
 ## Reverse enginering Model B
 - NPN Proximity Sensor LJ18A3-8-Z/BX-5V (https://nl.aliexpress.com/item/32844213899.html)
   - 5v Bruin
