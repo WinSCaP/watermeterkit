@@ -22,7 +22,7 @@
 # - Off: All fine!
 #
 substitutions:
-  slug: water_meter
+  slug: watermeter
   name: Water Meter
   description: "Small pulse sensor attached to the water meter of my home. Repo: https://github.com/WinSCaP/watermeterkit"
   api_password: !secret api_password
