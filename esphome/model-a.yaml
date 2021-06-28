@@ -123,9 +123,33 @@ web_server:
     username: "${web_server_username}"
     password: "${web_server_password}"
 
+binary_sensor:
+  - platform: status
+    name: "${name} sensor"
+
 sensor:
-  - platform: uptime
+  - platform: uptime # https://esphome.io/components/sensor/uptime.html?highlight=uptime
     id: sensor_uptime
+    icon: mdi:clock-start
+    update_interval: 60s
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(sensor_uptime).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? String(days) + "d " : "") +
+                (hours ? String(hours) + "h " : "") +
+                (minutes ? String(minutes) + "m " : "") +
+                (String(seconds) + "s")
+              ).c_str();
   - platform: template
     id: sensor_uptime_timestamp
     name: "${name} Uptime"
@@ -144,7 +168,7 @@ sensor:
     humidity:
       id: sensor_humidity
       name: "${name} Humidity"
-    update_interval: 60s	
+    update_interval: 60s
   - platform: pulse_meter
     id: sensor_pulse_meter
     name: "${name} Current Usage"
@@ -166,6 +190,18 @@ sensor:
         - light.turn_on:
             id: light_led_green
             flash_length: 1s
+  - platform: pulse_counter # Thank you yniezink
+    pin: D5
+    name: "${name} Usage"
+    id: sensor_pulse_counter
+    total:
+      id: sensor_pulse_counter_total
+      name: "${name} Usage in m3"
+      icon: "mdi:cube-outline"
+      unit_of_measurement: "M3"
+      accuracy_decimals: 3
+      filters:
+        - multiply: 0.001
   - platform: template
     id: sensor_wifi_signal_percentage
     name: "${name} Wi-Fi Signal Percentage"
@@ -190,7 +226,7 @@ sensor:
     update_interval: 300s
     on_value:
       - component.update: sensor_wifi_signal_percentage
-  - platform: template // Adapted from: https://community.home-assistant.io/t/how-to-do-maths-in-sensor-template-with-esphome-on-hassio/193994
+  - platform: template
     name: "${name} Dew Point"
     unit_of_measurement: "°C"
     lambda: |-
@@ -218,3 +254,7 @@ text_sensor:
   - platform: template
     name: "${name} Version"  
     id: template_version
+  - platform: template
+    name: "${name} Uptime Human Readable"
+    id: uptime_human
+    icon: mdi:clock-start
