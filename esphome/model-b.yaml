@@ -190,6 +190,8 @@ sensor:
         - light.turn_on:
             id: light_led_green
             flash_length: 1s
+        - component.update: sensor_pulse_counter
+        - component.update: sensor_pulse_counter_total
   - platform: template
     id: sensor_wifi_signal_percentage
     name: "${name} Wi-Fi Signal Percentage"
@@ -223,7 +225,21 @@ sensor:
       return ( (b * ( (id(sensor_temperature).state * a) / ( b + id(sensor_temperature).state) + logf (id(sensor_humidity).state/100) ) )/( a - ( (id(sensor_temperature).state * a) / ( b + id(sensor_temperature).state) + logf (id(sensor_humidity).state/100) ) ) ); 
     accuracy_decimals: 4
     update_interval: 60s
-
+  - platform: template
+    update_interval: never
+    name: "${name} Usage"
+    icon: "mdi:water-pump"
+    id: sensor_pulse_counter    
+    lambda: |-
+      return (id(sensor_pulse_meter).state);
+  - platform: template
+    update_interval: never  
+    name: "${name} Usage in m3"
+    icon: "mdi:cube-outline"
+    unit_of_measurement: "M3"    
+    id: sensor_pulse_counter_total
+    lambda: |-
+      return (id(sensor_pulse_meter_total).state);
             
 text_sensor:
   - platform: wifi_info
